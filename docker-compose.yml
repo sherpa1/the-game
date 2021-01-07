@@ -1,0 +1,41 @@
+version: "3.8"
+
+networks:
+  thegame:
+    driver: bridge
+
+services:
+  thegame.users.api:
+    container_name: thegame.users.api
+    image: node
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./users_api:/app
+      - ./users_api/node_modules:/app/outside/node_modules
+    working_dir: /app
+    env_file:
+      - ./users_api/.env
+    command: bash -c 'npm i && npm run dev'
+    networks:
+      - thegame
+    links:
+      - thegame.users.db
+  thegame.users.db:
+    container_name: thegame.users.db
+    image: mariadb
+    env_file:
+      - ./users_db/.env
+    networks:
+      - thegame
+    volumes:
+      - ./users_db_data:/var/lib/mysql
+  thegame.users.adminer:
+    container_name: thegame.users.adminer
+    image: adminer
+    ports:
+      - 8080:8080
+    networks:
+      - thegame
+    links:
+      - thegame.users.db

@@ -1,0 +1,4 @@
+users_db/.env
+users_api/.env
+users_api/outside/
+users_db_data/
