@@ -5,9 +5,11 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 
+//const MongoDBConnection = require("./utils/MongoDBConnection");//connexion à la bdd
 
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
+const playersRouter = require('./routes/players');
+const mongodb_connect = require('./utils/MongoDBConnect');
 
 const app = express();
 
@@ -23,7 +25,7 @@ app.use(
 );
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/players', playersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

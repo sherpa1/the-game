@@ -14,7 +14,8 @@ module.exports = class DBClient {
                 } else {
                     resolve(result.rows);
                 }
-            })
+            });
+
         });
     }
 
@@ -52,6 +53,19 @@ module.exports = class DBClient {
                 }
             })
         });
+    }
+
+    static close() {
+        if (db.threadId) {
+            try {
+                db.end();
+                console.log("Connection to DB closed");
+            } catch (error) {
+                throw new Error(error);
+            }
+        } else {
+            throw new Error("DB already closed");
+        }
     }
 
 

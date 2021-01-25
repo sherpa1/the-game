@@ -5,6 +5,50 @@ networks:
     driver: bridge
 
 services:
+  ################
+  ## API GAMING ##
+  ################
+  thegame.gaming.api:
+    container_name: thegame.gaming.api
+    image: node
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./gaming_api:/app
+      - ./gaming_api/node_modules:/app/outside/node_modules
+    working_dir: /app
+    env_file:
+      - ./gaming_api/.env
+    command: bash -c 'npm i && npm run dev' #node_modules installation and hot reloading
+    #command: bash -c 'npm i && npm start' #node_modules installation
+    #command: npm start #prod
+    networks:
+      - thegame
+    links:
+      - thegame.gaming.db:mongo
+      - thegame.users.api
+  thegame.gaming.db:
+    container_name: thegame.gaming.db
+    image: mongo:latest
+    volumes:
+      - ./mongo/data:/var/data
+    working_dir: /var/data
+    networks:
+      - thegame
+    ports:
+      - 27018:27017
+  thegame.gaming.mongo-express:
+    container_name: thegame.gaming.mongo-express
+    image: mongo-express:latest
+    networks:
+      - thegame
+    ports:
+      - "8081:8081"
+    links:
+      - thegame.gaming.db:mongo
+  ###############
+  ## API USERS ##
+  ###############
   thegame.users.api:
     container_name: thegame.users.api
     image: node
@@ -16,6 +60,28 @@ services:
     working_dir: /app
     env_file:
       - ./users_api/.env
-    command: bash -c 'npm i && npm run dev'
+    command: bash -c 'npm i && npm run dev' #node_modules installation and hot reloading
+    #command: bash -c 'npm i && npm start' #node_modules installation
+    #command: npm start #prod
     networks:
       - thegame
+    links:
+      - thegame.users.db
+  thegame.users.db:
+    container_name: thegame.users.db
+    image: mariadb
+    env_file:
+      - ./users_db/.env
+    networks:
+      - thegame
+    volumes:
+      - ./users_db_data:/var/lib/mysql
+  thegame.users.adminer:
+    container_name: thegame.users.adminer
+    image: adminer
+    ports:
+      - 9090:8080
+    networks:
+      - thegame
+    links:
+      - thegame.users.db

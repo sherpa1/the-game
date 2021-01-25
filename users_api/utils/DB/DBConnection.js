@@ -1,14 +1,6 @@
 const mysql = require('mysql');
 
-const ENV = process.env.NODE_ENV;
-const END_POINT = process.env['END_POINT'];
-const PORT = process.env['PORT'];
-
-const DB_HOST = process.env['DB_HOST'];
-const DB_NAME = process.env['DB_NAME'];
-const DB_USER = process.env['DB_USER'];
-const DB_PWD = process.env['DB_PWD'];
-
+const { DB_HOST, DB_NAME, DB_USER, DB_PWD, DB_PORT, DB_ENDPOINT, ENV } = process.env;
 
 const db = mysql.createConnection({
     host: DB_HOST,
@@ -25,5 +17,5 @@ db.connect(function (err) {
 
 });
 
-
 module.exports = db;
+

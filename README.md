@@ -39,6 +39,26 @@
 
   `bash -c "npm i && npm run dev"`
 
+## Adminer
+
+- Si la base de données thegame existe, connexion à l'interface avec utilisateur thegame :
+
+  - serveur = thegame.users.db
+  - utilisateur = thegame
+  - base de données = thegame
+  - mot de passe = (cf. ./users_db/.env MYSQL_PASSWORD)
+
+- Si la base de données "the game" n'existe pas encore, se connecter avec l'utilisateur root
+
+  - serveur = thegame.users.db
+  - utilisateur = root
+  - base de données =
+  - mot de passe = (cf. ./users_db/.env MYSQL_ROOT_PASSWORD)
+
+- En cas de problème de connexion à la base de données, supprimer le dossier ./users_db et redémarrer les services
+
+`sudo rm -rf users_db`
+
 ---
 
 **Ce projet est exclusivement destiné à l'enseignement.**
