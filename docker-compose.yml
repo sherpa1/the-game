@@ -1,87 +1,102 @@
 version: "3.8"
 
-networks:
-  thegame:
-    driver: bridge
-
 services:
   ################
   ## API GAMING ##
   ################
-  thegame.gaming.api:
-    container_name: thegame.gaming.api
+  thegame_gaming_api:
+    container_name: thegame_gaming_api
     image: node
     ports:
       - "3001:3000"
     volumes:
       - ./gaming_api:/app
-      - ./gaming_api/node_modules:/app/outside/node_modules
     working_dir: /app
     env_file:
       - ./gaming_api/.env
-    command: bash -c 'npm i && npm run dev' #node_modules installation and hot reloading
-    #command: bash -c 'npm i && npm start' #node_modules installation
-    #command: npm start #prod
-    networks:
-      - thegame
+    command: bash -c 'npm i && npm run dev' #for npm modules installation inside container and hot reloading in dev environment
+    #command: bash -c 'npm i && npm start' #for npm modules installation inside container without hot reloaing in dev environment
+    #command: npm start #for production environment
     links:
-      - thegame.gaming.db:mongo
-      - thegame.users.api
-  thegame.gaming.db:
-    container_name: thegame.gaming.db
-    image: mongo:latest
+      - thegame_gaming_db:mongo
+    depends_on:
+      - thegame_users_api
+
+  thegame_gaming_db:
+    container_name: thegame_gaming_db
+    image: mongo
     volumes:
-      - ./mongo/data:/var/data
-    working_dir: /var/data
-    networks:
-      - thegame
+      - ./gaming_db_data/:/data/db
     ports:
       - 27018:27017
-  thegame.gaming.mongo-express:
-    container_name: thegame.gaming.mongo-express
-    image: mongo-express:latest
-    networks:
-      - thegame
+    env_file:
+      - ./gaming_db/.env
+
+  thegame_gaming_mongoexpress:
+    container_name: thegame_gaming_mongoexpress
+    image: mongo-express
     ports:
-      - "8081:8081"
+      - 8081:8081
+    env_file:
+      - ./gaming_db/.env
     links:
-      - thegame.gaming.db:mongo
+      - thegame_gaming_db:mongo
+
   ###############
   ## API USERS ##
   ###############
-  thegame.users.api:
-    container_name: thegame.users.api
+  thegame_users_api:
+    container_name: thegame_users_api
     image: node
     ports:
       - "3000:3000"
     volumes:
       - ./users_api:/app
-      - ./users_api/node_modules:/app/outside/node_modules
     working_dir: /app
     env_file:
       - ./users_api/.env
-    command: bash -c 'npm i && npm run dev' #node_modules installation and hot reloading
-    #command: bash -c 'npm i && npm start' #node_modules installation
-    #command: npm start #prod
-    networks:
-      - thegame
-    links:
-      - thegame.users.db
-  thegame.users.db:
-    container_name: thegame.users.db
+    command: bash -c 'npm i && npm run dev' #for npm modules installation inside container and hot reloading in dev environment
+    #command: bash -c 'npm i && npm start' #for npm modules installation inside container without hot reloaing in dev environment
+    #command: npm start #for production environment
+    depends_on:
+      - thegame_users_db
+
+  thegame_users_db:
+    container_name: thegame_users_db
     image: mariadb
     env_file:
       - ./users_db/.env
-    networks:
-      - thegame
     volumes:
       - ./users_db_data:/var/lib/mysql
-  thegame.users.adminer:
-    container_name: thegame.users.adminer
+
+  thegame_users_adminer:
+    container_name: thegame_users_adminer
     image: adminer
     ports:
       - 9090:8080
-    networks:
-      - thegame
-    links:
-      - thegame.users.db
+    depends_on:
+      - thegame_users_db
+
+  ################
+  ## API MAILER ##
+  ################
+  thegame_mailer_api:
+    container_name: thegame_mailer_api
+    image: node
+    ports:
+      - "3005:3000"
+    volumes:
+      - ./mailer_api:/app
+    working_dir: /app
+    env_file:
+      - ./mailer_api/.env
+    #command: bash -c 'npm i && npm run dev' #for npm modules installation inside container and hot reloading in dev environment
+    command: bash -c 'npm i && npm start' #for npm modules installation inside container without hot reloaing in dev environment
+    #command: npm start #for production environment
+    depends_on:
+      - thegame_mailer_maildev
+
+  thegame_mailer_maildev:
+    image: maildev/maildev
+    ports:
+      - "1080:80"

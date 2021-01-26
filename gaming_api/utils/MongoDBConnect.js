@@ -1,13 +1,16 @@
 const mongoose = require("mongoose");
+const { DB_NAME, DB_HOST, DB_USER, DB_PWD } = process.env;
 
-const DB_NAME = process.env.DB;
-
-//connexion à la bdd mongo
-mongoose.connect("mongodb://" + DB_NAME, {
+mongoose.connect(`mongodb://${DB_HOST}`, {
+    user: DB_USER,
+    pass: DB_PWD,
+    dbName: DB_NAME,
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => {
-    console.log(`Connection to the NoSQL MongoDB database "${DB_NAME}"`);
+    console.log(`✅ Successful connection to the NoSQL "${DB_NAME}" MongoDB database`);
+}).catch(error => {
+    throw new Error(error);
 });
 
 module.exports = mongoose;

@@ -18,6 +18,7 @@ const mysql = require('mysql');
 const fs = require("fs");
 
 const hide_password = require('../middlewares/hide_password');
+const hateoas = require('../middlewares/hateoas');
 
 
 router.get('/:uuid', async (req, res, next) => {
@@ -40,12 +41,7 @@ router.get('/:uuid', async (req, res, next) => {
 
   }
 
-  if (user.password)
-    delete user.password;
-
-  res.json(user);
-
-  //next(user);//result wil be treated by hide_password middleware
+  next(user);//result wil be treated by hide_password middleware
 
 });
 
@@ -118,5 +114,6 @@ router.post('/', async (req, res, next) => {
 });
 
 router.use(hide_password);
+router.use(hateoas);
 
 module.exports = router;

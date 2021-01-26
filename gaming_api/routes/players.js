@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const uuid = require("uuid");
-
+const { v4: uuidv4 } = require('uuid');
 const Player = require("../models/Player");
 
 const axios = require('axios');
@@ -9,6 +8,8 @@ const axios = require('axios');
 router.get('/', async (req, res, next) => {
 
     let players = [];
+
+    await Player.create({ user_uuid: uuidv4() });
 
     try {
 
