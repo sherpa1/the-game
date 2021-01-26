@@ -9,6 +9,7 @@ const bodyParser = require('body-parser');
 
 const indexRouter = require('./routes/index');
 const playersRouter = require('./routes/players');
+const partiesRouter = require('./routes/parties');
 const mongodb_connect = require('./utils/MongoDBConnect');
 
 const app = express();
@@ -26,6 +27,7 @@ app.use(
 
 app.use('/', indexRouter);
 app.use('/players', playersRouter);
+app.use('/parties', partiesRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

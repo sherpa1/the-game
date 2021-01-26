@@ -1,13 +1,12 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const Player = require("./Player");
 
 const schema = new mongoose.Schema({
-    uuid: { type: String, index: true, unique: true, required: true },
-    token: { type: String, index: true, unique: true, required: true },
-    players: [{ type: Schema.Types.ObjectId, ref: 'Player', required: false }],
-    turn_1_winner: { type: Schema.Types.ObjectId, ref: 'Player', required: false },
-    turn_2_winner: { type: Schema.Types.ObjectId, ref: 'Player', required: false },
-    turn_3_winner: { type: Schema.Types.ObjectId, ref: 'Player', required: false },
+    token: { type: String, index: true, unique: true, required: false, default: '' },
+    turn_1_winner: { type: Schema.Types.ObjectId, ref: "Player", default: null },
+    turn_2_winner: { type: Schema.Types.ObjectId, ref: "Player", default: null },
+    turn_3_winner: { type: Schema.Types.ObjectId, ref: "Player", default: null },
 });
 
-module.exports = mongoose.model("Player", schema);
+module.exports = mongoose.model("Party", schema);
