@@ -1,30 +1,46 @@
-const fs = require("fs");
 const jwt = require('jsonwebtoken');
 const validator = require("validator");
+const jwt_private_key = process.env.JWT_PRIVATE_KEY;
+const DBClient = require("../utils/DB/DBClient");
 
-module.exports.isAuthorized = function isAuthorized(req, res, next) {
+const is_not_authorized = async (res, error_description = "", code = 401) => {
+    return res.status(code).json({ code: code, error: "Not Authorized", error_description: error_description });
+}
 
-    if (typeof req.headers.authorization !== "undefined") {
+const is_authorized = async (req, res, next) => {
 
-        const token = req.headers.authorization.split(' ')[1];//Bearer Authorization
+    if (typeof req.headers.authorization == undefined)
+        return is_not_authorized(res, "Missing Credentials");
 
-        if (!validator.isJWT(token)) return res.status(401).json({ code: 401, error: "Not Authorized", error_description: "Token is not valid" });
 
-        const jwt_private_key = fs.readFileSync('jwt_private.key');
+    const token = req.headers.authorization.split(' ')[1];//Bearer Authorization
 
-        jwt.verify(token, jwt_private_key, { algorithm: "HS256" }, (err, user) => {
+    if (token == undefined || token == null)
+        return is_not_authorized(res, "Missing Credentials");
+
+    if (!validator.isJWT(token))
+        return is_not_authorized(res, "Token is not valid");
+
+    try {
+
+        jwt.verify(token, jwt_private_key, { algorithm: "HS256" }, (err, payload) => {
 
             if (err) {
-                if (err.message === "jwt expired") return res.status(498).json({ code: 498, error: "Not Authorized", error_description: "Expired Token" })
+                console.error(err);
+                if (err.message === "jwt expired")
+                    return is_not_authorized(res, "Expired Token", 498);
 
-                return res.status(401).json({ code: 401, error: "Not Authorized", error_description: err.message });
+                return is_not_authorized(res,);
             }
 
-            return next();
+            return next(payload);//is authorized
 
         });
 
-    } else {
-        return res.status(400).json({ code: 401, error: "Not Authorized", error_description: "Missing Credentials" });
+    } catch (error) {
+        return is_not_authorized(res,);
     }
+
 }
+
+module.exports = is_authorized;
