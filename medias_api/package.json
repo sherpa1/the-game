@@ -1,5 +1,5 @@
 {
-  "name": "mailer-api",
+  "name": "medias-api",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -7,15 +7,17 @@
     "dev": "nodemon ./bin/www"
   },
   "dependencies": {
-    "bcryptjs": "^2.4.3",
+    "axios": "^0.21.0",
     "body-parser": "^1.19.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
-    "nodemon": "",
-    "nodemailer": "",
+    "multer": "^1.4.2",
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.7",
+    "uuid": "^8.3.2",
     "validator": "^13.5.2"
   }
 }

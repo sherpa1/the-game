@@ -4,3 +4,7 @@ users_db_data/
 gaming_api/.env
 gaming_db/
 mailer_api/.env
+medias_api/.env
+medias_db/.env
+medias_db_data/
+broadcast_api/.env

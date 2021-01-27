@@ -21,7 +21,6 @@ services:
     #   - thegame_gaming_db:mongo
     depends_on:
       - thegame_gaming_db
-      - thegame_users_api
 
   thegame_gaming_db:
     container_name: thegame_gaming_db
@@ -103,3 +102,55 @@ services:
     image: maildev/maildev
     ports:
       - "1080:80"
+
+  ###################
+  ## API BROADCAST ##
+  ###################
+  thegame_broadcast_api:
+    container_name: thegame_broadcast_api
+    image: node
+    ports:
+      - "3004:3000"
+    volumes:
+      - ./broadcast_api:/app
+    working_dir: /app
+    env_file:
+      - ./broadcast_api/.env
+    #command: bash -c 'npm i && npm run dev' #for npm modules installation inside container and hot reloading in dev environment
+    command: bash -c 'npm i && npm start' #for npm modules installation inside container without hot reloaing in dev environment
+    #command: npm start #for production environment
+
+  ################
+  ## API MEDIAS ##
+  ################
+  thegame_medias_api:
+    container_name: thegame_medias_api
+    image: node
+    ports:
+      - "3003:3000"
+    volumes:
+      - ./medias_api:/app
+    working_dir: /app
+    env_file:
+      - ./medias_api/.env
+    command: bash -c 'npm i && npm run dev' #for npm modules installation inside container and hot reloading in dev environment
+    #command: bash -c 'npm i && npm start' #for npm modules installation inside container without hot reloaing in dev environment
+    #command: npm start #for production environment
+    depends_on:
+      - thegame_medias_db
+
+  thegame_medias_db:
+    container_name: thegame_medias_db
+    image: mariadb
+    env_file:
+      - ./users_db/.env
+    volumes:
+      - ./users_db_data:/var/lib/mysql
+
+  thegame_medias_adminer:
+    container_name: thegame_medias_adminer
+    image: adminer
+    ports:
+      - 9191:8080
+    depends_on:
+      - thegame_medias_db

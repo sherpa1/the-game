@@ -33,27 +33,6 @@ router.post('/', async (req, res, next) => {
         throw new Error(error);
     }
 
-
-    // try {
-
-    //     if (a_party != undefined && a_party != null)
-    //         token = await Tokenizer.create({ id: a_party._id });
-
-    // } catch (error) {
-    //     console.error(error);
-    //     throw new Error(error);
-    // }
-
-    // try {
-
-    //     if (token != undefined && token != null)
-    //         a_party = await Party.findOneAndUpdate({ id: a_party._id }, { token: token });
-
-    // } catch (error) {
-    //     console.error(error);
-    //     throw new Error(error);
-    // }
-
     try {
 
         parties = await Party.find();
