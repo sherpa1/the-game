@@ -6,7 +6,7 @@ const logger = require('morgan');
 const bodyParser = require('body-parser');
 
 const indexRouter = require('./routes/index');
-const mediasRouter = require('./routes/players');
+const mediasRouter = require('./routes/medias');
 
 
 const app = express();

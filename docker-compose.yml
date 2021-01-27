@@ -78,6 +78,7 @@ services:
       - 9090:8080
     depends_on:
       - thegame_users_db
+      - thegame_medias_db
 
   ################
   ## API MAILER ##
@@ -133,8 +134,8 @@ services:
     working_dir: /app
     env_file:
       - ./medias_api/.env
-    command: bash -c 'npm i && npm run dev' #for npm modules installation inside container and hot reloading in dev environment
-    #command: bash -c 'npm i && npm start' #for npm modules installation inside container without hot reloaing in dev environment
+    #command: bash -c 'npm i && npm run dev' #for npm modules installation inside container and hot reloading in dev environment
+    command: bash -c 'npm i && npm start' #for npm modules installation inside container without hot reloaing in dev environment
     #command: npm start #for production environment
     depends_on:
       - thegame_medias_db
@@ -143,14 +144,6 @@ services:
     container_name: thegame_medias_db
     image: mariadb
     env_file:
-      - ./users_db/.env
+      - ./medias_db/.env
     volumes:
-      - ./users_db_data:/var/lib/mysql
-
-  thegame_medias_adminer:
-    container_name: thegame_medias_adminer
-    image: adminer
-    ports:
-      - 9191:8080
-    depends_on:
-      - thegame_medias_db
+      - ./medias_db_data:/var/lib/mysql
