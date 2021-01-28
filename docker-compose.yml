@@ -1,54 +1,54 @@
 version: "3.8"
 
 services:
-  ################
-  ## API GAMING ##
-  ################
-  thegame_gaming_api:
-    container_name: thegame_gaming_api
+  ##################
+  ## API E-GAMING ##
+  ##################
+  the_game_e_gaming_api:
+    container_name: the_game_e_gaming_api
     image: node
     ports:
       - "3001:3000"
     volumes:
-      - ./gaming_api:/app
+      - ./e_gaming_api:/app
     working_dir: /app
     env_file:
-      - ./gaming_api/.env
-    command: bash -c 'npm i && npm run dev' #for npm modules installation inside container and hot reloading in dev environment
-    #command: bash -c 'npm i && npm start' #for npm modules installation inside container without hot reloaing in dev environment
+      - ./e_gaming_api/.env
+    #command: bash -c 'npm i && npm run dev' #for npm modules installation inside container and hot reloading in dev environment
+    command: bash -c 'npm i && npm start' #for npm modules installation inside container without hot reloaing in dev environment
     #command: npm start #for production environment
     # links:
-    #   - thegame_gaming_db:mongo
+    #   - the_game_e_gaming_db:mongo
     depends_on:
-      - thegame_gaming_db
+      - the_game_e_gaming_db
 
-  thegame_gaming_db:
-    container_name: thegame_gaming_db
+  the_game_e_gaming_db:
+    container_name: the_game_e_gaming_db
     image: mongo
     volumes:
-      - ./gaming_db_data/:/data/db
+      - ./e_gaming_db_data/:/data/db
     ports:
       - 27018:27017
     env_file:
-      - ./gaming_db/.env
+      - ./e_gaming_db/.env
 
-  thegame_gaming_mongoexpress:
-    container_name: thegame_gaming_mongoexpress
+  the_game_e_gaming_mongoexpress:
+    container_name: the_game_e_gaming_mongoexpress
     image: mongo-express
     ports:
       - 8081:8081
     env_file:
-      - ./gaming_db/.env
+      - ./e_gaming_mongoexpress/.env
     # links:
-    #   - thegame_gaming_db:mongo
-    depends_on:
-      - thegame_gaming_db
+    #   - the_game_e_gaming_db:mongo
+    # depends_on:
+    #   - the_game_e_gaming_db
 
   ###############
   ## API USERS ##
   ###############
-  thegame_users_api:
-    container_name: thegame_users_api
+  the_game_users_api:
+    container_name: the_game_users_api
     image: node
     ports:
       - "3000:3000"
@@ -61,30 +61,27 @@ services:
     #command: bash -c 'npm i && npm start' #for npm modules installation inside container without hot reloaing in dev environment
     #command: npm start #for production environment
     depends_on:
-      - thegame_users_db
+      - the_game_users_db
 
-  thegame_users_db:
-    container_name: thegame_users_db
+  the_game_users_db:
+    container_name: the_game_users_db
     image: mariadb
     env_file:
       - ./users_db/.env
     volumes:
       - ./users_db_data:/var/lib/mysql
 
-  thegame_users_adminer:
-    container_name: thegame_users_adminer
+  the_game_users_adminer:
+    container_name: the_game_users_adminer
     image: adminer
     ports:
       - 9090:8080
-    depends_on:
-      - thegame_users_db
-      - thegame_medias_db
 
   ################
   ## API MAILER ##
   ################
-  thegame_mailer_api:
-    container_name: thegame_mailer_api
+  the_game_mailer_api:
+    container_name: the_game_mailer_api
     image: node
     ports:
       - "3005:3000"
@@ -97,35 +94,34 @@ services:
     #command: bash -c 'npm i && npm start' #for npm modules installation inside container without hot reloaing in dev environment
     #command: npm start #for production environment
     depends_on:
-      - thegame_mailer_maildev
+      - the_game_mailer_maildev
 
-  thegame_mailer_maildev:
+  the_game_mailer_maildev:
     image: maildev/maildev
     ports:
       - "1080:80"
 
-  ###################
-  ## API BROADCAST ##
-  ###################
-  thegame_broadcast_api:
-    container_name: thegame_broadcast_api
+  #####################
+  ## API BROADCASTER ##
+  #####################
+  the_game_broadcaster_api:
+    container_name: the_game_broadcaster_api
     image: node
     ports:
       - "3004:3000"
     volumes:
-      - ./broadcast_api:/app
+      - ./broadcaster_api:/app
     working_dir: /app
     env_file:
-      - ./broadcast_api/.env
+      - ./broadcaster_api/.env
     #command: bash -c 'npm i && npm run dev' #for npm modules installation inside container and hot reloading in dev environment
     command: bash -c 'npm i && npm start' #for npm modules installation inside container without hot reloaing in dev environment
     #command: npm start #for production environment
-
   ################
   ## API MEDIAS ##
   ################
-  thegame_medias_api:
-    container_name: thegame_medias_api
+  the_game_medias_api:
+    container_name: the_game_medias_api
     image: node
     ports:
       - "3003:3000"
@@ -138,12 +134,36 @@ services:
     command: bash -c 'npm i && npm start' #for npm modules installation inside container without hot reloaing in dev environment
     #command: npm start #for production environment
     depends_on:
-      - thegame_medias_db
-
-  thegame_medias_db:
-    container_name: thegame_medias_db
+      - the_game_medias_db
+  the_game_medias_db:
+    container_name: the_game_medias_db
     image: mariadb
     env_file:
       - ./medias_db/.env
     volumes:
       - ./medias_db_data:/var/lib/mysql
+  ##################
+  ## API GAMEPLAY ##
+  ##################
+  the_game_gameplay_api:
+    container_name: the_game_gameplay_api
+    image: node
+    ports:
+      - "3002:3000"
+    volumes:
+      - ./gameplay_api:/app
+    working_dir: /app
+    env_file:
+      - ./gameplay_api/.env
+    #command: bash -c 'npm i && npm run dev' #for npm modules installation inside container and hot reloading in dev environment
+    command: bash -c 'npm i && npm start' #for npm modules installation inside container without hot reloaing in dev environment
+    #command: npm start #for production environment
+    depends_on:
+      - the_game_gameplay_db
+  the_game_gameplay_db:
+    container_name: the_game_gameplay_db
+    image: mariadb
+    env_file:
+      - ./gameplay_db/.env
+    volumes:
+      - ./gameplay_db_data:/var/lib/mysql

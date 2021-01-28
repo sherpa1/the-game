@@ -2,9 +2,25 @@ const db = require("./DBConnection");
 
 module.exports = class DBClient {
 
-    static async all(sql, values = []) {
+    static async get_submodel(submodel = "", submodel_id = 0) {
+        if (!submodel_id) reject(new Error(`Submodel can't be equal to "${submodel_id}"`));
+
+        const query = `SELECT * FROM ${submodel} WHERE id = ${submodel_id}`;
+
         return new Promise((resolve, reject) => {
-            db.query(sql, values, (err, result) => {
+            db.query(query, (err, result, next) => {
+                if (err) {
+                    reject(err.message);
+                } else {
+                    resolve(result.rows);
+                }
+            });
+        });
+    }
+
+    static async all(query) {
+        return new Promise((resolve, reject) => {
+            db.query(query, (err, result, next) => {
                 if (err) {
                     reject(err.message);
                 } else {
@@ -14,9 +30,9 @@ module.exports = class DBClient {
         });
     }
 
-    static async one(sql, values = []) {
+    static async one(query) {
         return new Promise((resolve, reject) => {
-            db.query(sql, values, (err, result) => {
+            db.query(query, (err, result, next) => {
                 if (err) {
                     reject(err.message);
                 } else {
@@ -26,9 +42,9 @@ module.exports = class DBClient {
         });
     }
 
-    static query(sql, values = []) {
+    static query(query) {
         return new Promise((resolve, reject) => {
-            db.query(sql, values, (err, result) => {
+            db.query(query, (err, result, next) => {
                 if (err) {
                     reject(err.message);
                 } else {

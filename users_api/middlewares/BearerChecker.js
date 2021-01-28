@@ -9,7 +9,7 @@ const is_not_authorized = async (res, error_description = "", code = 401) => {
 
 const is_authorized = async (req, res, next) => {
 
-    if (typeof req.headers.authorization == undefined)
+    if (typeof req.headers.authorization == undefined || !req.headers.authorization)
         return is_not_authorized(res, "Missing Credentials");
 
 

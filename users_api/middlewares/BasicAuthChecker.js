@@ -28,7 +28,12 @@ const isAuthorized = async (req, res, next) => {
     if (!validator.isEmail(email)) return isNotAuthorized(res, "Email is required");
     if (validator.isEmpty(password)) return isNotAuthorized(res, "Password is required");
 
-    const user = await DBClient.one(`SELECT * FROM users WHERE email='${email}'`);
+
+    const sql = `SELECT * FROM users WHERE email=?`;
+    const values = [email];
+
+    const user = await DBClient.one(sql, values);
+
 
     if (typeof user == "undefined" || !user || user == null) {
         console.error("User does not exist");
@@ -41,7 +46,6 @@ const isAuthorized = async (req, res, next) => {
 
         await bcrypt.compare(password, hash).then(async (result) => {
             if (result === true) {
-
 
                 next(user);//is authorized
 
