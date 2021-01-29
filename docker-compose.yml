@@ -17,8 +17,6 @@ services:
     #command: bash -c 'npm i && npm run dev' #for npm modules installation inside container and hot reloading in dev environment
     command: bash -c 'npm i && npm start' #for npm modules installation inside container without hot reloaing in dev environment
     #command: npm start #for production environment
-    # links:
-    #   - the_game_e_gaming_db:mongo
     depends_on:
       - the_game_e_gaming_db
 
@@ -31,18 +29,6 @@ services:
       - 27018:27017
     env_file:
       - ./e_gaming_db/.env
-
-  the_game_e_gaming_mongoexpress:
-    container_name: the_game_e_gaming_mongoexpress
-    image: mongo-express
-    ports:
-      - 8081:8081
-    env_file:
-      - ./e_gaming_mongoexpress/.env
-    # links:
-    #   - the_game_e_gaming_db:mongo
-    # depends_on:
-    #   - the_game_e_gaming_db
 
   ###############
   ## API USERS ##
@@ -60,8 +46,6 @@ services:
     command: bash -c 'npm i && npm run dev' #for npm modules installation inside container and hot reloading in dev environment
     #command: bash -c 'npm i && npm start' #for npm modules installation inside container without hot reloaing in dev environment
     #command: npm start #for production environment
-    depends_on:
-      - the_game_users_db
 
   the_game_users_db:
     container_name: the_game_users_db
@@ -70,12 +54,6 @@ services:
       - ./users_db/.env
     volumes:
       - ./users_db_data:/var/lib/mysql
-
-  the_game_users_adminer:
-    container_name: the_game_users_adminer
-    image: adminer
-    ports:
-      - 9090:8080
 
   ################
   ## API MAILER ##
@@ -93,13 +71,6 @@ services:
     command: bash -c 'npm i && npm run dev' #for npm modules installation inside container and hot reloading in dev environment
     #command: bash -c 'npm i && npm start' #for npm modules installation inside container without hot reloaing in dev environment
     #command: npm start #for production environment
-    depends_on:
-      - the_game_mailer_maildev
-
-  the_game_mailer_maildev:
-    image: maildev/maildev
-    ports:
-      - "1080:80"
 
   #####################
   ## API BROADCASTER ##
@@ -117,6 +88,7 @@ services:
     #command: bash -c 'npm i && npm run dev' #for npm modules installation inside container and hot reloading in dev environment
     command: bash -c 'npm i && npm start' #for npm modules installation inside container without hot reloaing in dev environment
     #command: npm start #for production environment
+
   ################
   ## API MEDIAS ##
   ################
@@ -133,8 +105,7 @@ services:
     #command: bash -c 'npm i && npm run dev' #for npm modules installation inside container and hot reloading in dev environment
     command: bash -c 'npm i && npm start' #for npm modules installation inside container without hot reloaing in dev environment
     #command: npm start #for production environment
-    depends_on:
-      - the_game_medias_db
+
   the_game_medias_db:
     container_name: the_game_medias_db
     image: mariadb
@@ -142,6 +113,7 @@ services:
       - ./medias_db/.env
     volumes:
       - ./medias_db_data:/var/lib/mysql
+
   ##################
   ## API GAMEPLAY ##
   ##################
@@ -158,8 +130,7 @@ services:
     #command: bash -c 'npm i && npm run dev' #for npm modules installation inside container and hot reloading in dev environment
     command: bash -c 'npm i && npm start' #for npm modules installation inside container without hot reloaing in dev environment
     #command: npm start #for production environment
-    depends_on:
-      - the_game_gameplay_db
+
   the_game_gameplay_db:
     container_name: the_game_gameplay_db
     image: mariadb
@@ -167,3 +138,27 @@ services:
       - ./gameplay_db/.env
     volumes:
       - ./gameplay_db_data:/var/lib/mysql
+
+  ###########
+  ## UTILS ##
+  ###########
+  the_game_mongoexpress:
+    container_name: the_game_mongoexpress
+    image: mongo-express
+    ports:
+      - 8081:8081
+    env_file:
+      - ./mongoexpress/.env
+    depends_on:
+      - the_game_e_gaming_db
+
+  the_game_maildev:
+    image: maildev/maildev
+    ports:
+      - "1080:80"
+
+  the_game_adminer:
+    container_name: the_game_adminer
+    image: adminer
+    ports:
+      - 9090:8080
